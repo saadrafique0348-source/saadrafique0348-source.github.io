@@ -50,7 +50,7 @@
   background:var(--srt-card);border:1px solid var(--srt-border);
   overflow:hidden;isolation:isolate;
   transition:transform .35s cubic-bezier(.2,.7,.2,1),border-color .35s,box-shadow .35s;
-  opacity:0;transform:translateY(14px);
+  opacity:1;transform:none;
 }
 .srt-card.is-in{opacity:1;transform:none;transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1),border-color .35s,box-shadow .35s}
 .srt-card.is-in:hover{transform:translateY(-6px);border-color:color-mix(in srgb,var(--srt-accent) 45%,transparent);box-shadow:0 24px 50px -24px rgba(0,0,0,.8)}
