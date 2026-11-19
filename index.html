@@ -10,6 +10,7 @@
   <meta property="og:title" content="Saad Rafique | Portfolio"><meta property="og:description" content="Code, creativity and digital experiences."><meta property="og:type" content="website"><meta property="og:url" content="https://saadrafique.me/">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -76,7 +77,7 @@
       <div class="section-topline"><div><p class="kicker">04 / HOW I CAN HELP</p><h2>Services</h2></div><p class="section-note">Creative and practical support<br>for your next digital project.</p></div>
       <div class="service-list">
         <div class="service-row"><span class="service-index">01</span><h3>Website Development</h3><p>Responsive personal, portfolio and small-business websites.</p><span class="service-arrow">↗</span></div>
-        <div class="service-row"><span class="service-index">02</span><h3>Video Editing</h3><p>Reels, short-form edits and promotional videos.</p><span class="service-arrow">↗</span></div>
+        <div class="service-row"><span class="service-index">02</span><h3>Video Editing</h3><p>Reels, short-form edits and promotional videos — Rs 1,500–2,000.</p><span class="service-arrow">↗</span></div>
         <div class="service-row"><span class="service-index">03</span><h3>Graphic Design</h3><p>Posters, social media posts and visual content.</p><span class="service-arrow">↗</span></div>
       </div>
     </section>
@@ -91,12 +92,158 @@
       <p class="training-note"><b>Additional training</b> · Disaster Risk Management Training (UNICEF, Pakistan Boy Scouts Association, NDMA) · CSSP Leadership Training</p>
     </section>
 
+
+    <section class="srt" id="testimonials" aria-labelledby="srt-title" hidden>
+      <div class="srt__wrap">
+        <p class="kicker">06 / WHAT CLIENTS SAY</p>
+        <h2 class="srt__title" id="srt-title">What My Clients Say</h2>
+        <div class="srt__grid" id="srt-grid"></div>
+      </div>
+    </section>
+    <script>
+(function () {
+  /* =====================================================================
+     EDIT HERE — your testimonials.
+     • ADD: copy one { ... }, paste it in the list, change the values.
+     • EDIT: change the text. REMOVE: delete the whole { ... },
+     • REPLACE the placeholders: swap values and set placeholder:false
+       (or delete that line) so the "Placeholder" tag disappears.
+     Fields:
+       name      client's name
+       project   project type, e.g. "Brand identity"
+       feedback  what the client said
+       photo     (optional) image URL, e.g. "images/clients/jane.jpg"
+       rating    (optional) 1–5, halves allowed (4.5). Leave it out and
+                 NO stars are shown.
+       placeholder  true = shows a "Placeholder" tag
+     ===================================================================== */
+  var TESTIMONIALS = [
+    {
+      name: "Waseem Jatt",
+      project: "Video & Poster",
+      feedback: "Aap ne waqai bohot acha kaam kiya tha, time par bhi diya aur charges bhi kaafi reasonable thay."
+    }
+  ];
+  /* ===================== end of editable area ===================== */
+
+  var section = document.getElementById("testimonials");
+  var grid = document.getElementById("srt-grid");
+  if (!section || !grid || !TESTIMONIALS.length) return;
+
+  var NS = "http://www.w3.org/2000/svg";
+  var STAR = "M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z";
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+
+  function starSvg(cls) {
+    var s = document.createElementNS(NS, "svg");
+    s.setAttribute("viewBox", "0 0 24 24");
+    s.setAttribute("aria-hidden", "true");
+    var p = document.createElementNS(NS, "path");
+    p.setAttribute("d", STAR);
+    p.setAttribute("class", cls);
+    s.appendChild(p);
+    return s;
+  }
+
+  function stars(rating) {
+    var r = Math.max(0, Math.min(5, Math.round(rating * 2) / 2));
+    var wrap = el("div", "srt-stars");
+    wrap.setAttribute("role", "img");
+    wrap.setAttribute("aria-label", "Rated " + r + " out of 5");
+    for (var i = 0; i < 5; i++) {
+      var fill = Math.max(0, Math.min(1, r - i));
+      var star = el("span", "srt-star");
+      star.appendChild(starSvg("bg"));
+      if (fill > 0) {
+        var fg = starSvg("fg");
+        if (fill < 1) fg.style.clipPath = "inset(0 " + (1 - fill) * 100 + "% 0 0)";
+        star.appendChild(fg);
+      }
+      wrap.appendChild(star);
+    }
+    return wrap;
+  }
+
+  function avatar(t) {
+    var a = el("div", "srt-avatar");
+    if (t.photo) {
+      var img = new Image();
+      img.src = t.photo;
+      img.alt = "Photo of " + t.name;
+      img.loading = "lazy";
+      img.onerror = function () { img.remove(); a.appendChild(icon()); };
+      a.appendChild(img);
+    } else {
+      a.appendChild(icon());
+    }
+    return a;
+  }
+
+  function icon() {
+    var s = document.createElementNS(NS, "svg");
+    s.setAttribute("viewBox", "0 0 24 24");
+    s.setAttribute("fill", "none");
+    s.setAttribute("stroke", "currentColor");
+    s.setAttribute("stroke-width", "1.6");
+    s.setAttribute("aria-hidden", "true");
+    s.innerHTML = '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>';
+    return s;
+  }
+
+  var cards = TESTIMONIALS.map(function (t) {
+    var card = el("figure", "srt-card");
+    card.style.margin = "0";
+    if (t.placeholder) card.appendChild(el("span", "srt-card__badge", "Placeholder"));
+    if (typeof t.rating === "number" && t.rating > 0) card.appendChild(stars(t.rating));
+    card.appendChild(el("blockquote", "srt-card__quote", t.feedback));
+    var who = el("figcaption", "srt-card__who");
+    who.appendChild(avatar(t));
+    var meta = el("div");
+    meta.appendChild(el("span", "srt-card__name", t.name));
+    if (t.project) meta.appendChild(el("span", "srt-card__project", t.project));
+    who.appendChild(meta);
+    card.appendChild(who);
+
+    card.addEventListener("pointermove", function (e) {
+      var r = card.getBoundingClientRect();
+      card.style.setProperty("--mx", e.clientX - r.left + "px");
+      card.style.setProperty("--my", e.clientY - r.top + "px");
+    });
+    grid.appendChild(card);
+    return card;
+  });
+
+  section.hidden = false;
+
+  /* One gentle staggered reveal as the section scrolls into view */
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        cards.forEach(function (c, i) {
+          setTimeout(function () { c.classList.add("is-in"); }, i * 110);
+        });
+        io.disconnect();
+      });
+    }, { threshold: 0.15 });
+    io.observe(grid);
+  } else {
+    cards.forEach(function (c) { c.classList.add("is-in"); });
+  }
+})();
+    </script>
     <section class="contact-section" id="contact">
-      <div class="section-wrap contact-inner"><div><p class="kicker">06 / GET IN TOUCH</p><h2>Have an idea?<br><span class="gradient-text">Let's make it happen.</span></h2><p class="contact-copy">I'm open to conversations, collaborations and creative opportunities.</p></div>
+      <div class="section-wrap contact-inner"><div><p class="kicker">07 / GET IN TOUCH</p><h2>Have an idea?<br><span class="gradient-text">Let's make it happen.</span></h2><p class="contact-copy">I'm open to conversations, collaborations and creative opportunities.</p></div>
       <div class="contact-actions"><a class="contact-link" href="mailto:saadrafique0348@gmail.com"><span class="contact-symbol">✉</span><span><small>EMAIL ME</small><b>saadrafique0348@gmail.com</b></span><i>↗</i></a><a class="contact-link" href="https://wa.me/923232956265" target="_blank" rel="noopener"><span class="contact-symbol">◉</span><span><small>WHATSAPP</small><b>Start a conversation</b></span><i>↗</i></a></div>
       </div>
     </section>
   </main>
-  <footer class="footer"><div class="footer-main"><a class="brand" href="#home"><span class="brand-mark">S</span><span>SAAD<span class="brand-dot">.</span></span></a><p>Built with curiosity and creativity.</p><div class="social-links"><a href="https://github.com/saadrafique0348-source" target="_blank" rel="noopener">GitHub ↗</a><a href="https://www.tiktok.com/@saadrafique573" target="_blank" rel="noopener">TikTok ↗</a><a href="https://saadrafique.me">Website ↗</a></div></div><div class="footer-bottom"><span>© <span id="year">2026</span> Saad Rafique. All rights reserved.</span><a href="#home">Back to top ↑</a></div></footer>
+  <footer class="footer"><div class="footer-main"><a class="brand" href="#home"><span class="brand-mark">S</span><span>SAAD<span class="brand-dot">.</span></span></a><p>Built with curiosity and creativity.</p><div class="social-links"><a href="https://github.com/saadrafique0348-source" target="_blank" rel="noopener">GitHub ↗</a><a href="https://www.tiktok.com/@saadrafique573" target="_blank" rel="noopener">TikTok ↗</a><a href="https://www.instagram.com/saad_bhatti_2005" target="_blank" rel="noopener">Instagram ↗</a><a href="https://saadrafique.me">Website ↗</a></div></div><div class="footer-bottom"><span>© <span id="year">2026</span> Saad Rafique. All rights reserved.</span><a href="#home">Back to top ↑</a></div></footer>
   <script src="script.js"></script>
 </body></html>
