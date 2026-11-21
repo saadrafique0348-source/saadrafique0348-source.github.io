@@ -96,3 +96,12 @@
 .showreel{text-align:center}
 .showreel .section-heading{margin-left:auto;margin-right:auto}
 .showreel-video{display:block;width:min(420px,100%);margin:1.75rem auto 0;aspect-ratio:9/16;border-radius:18px;border:1px solid var(--line);background:#000;box-shadow:0 24px 60px rgba(0,0,0,.4)}
+
+/* ---- Hyderabad Home Tutors project card ---- */
+.work-image a{display:block;height:100%}
+.work-info .work-role{font-size:11px;color:var(--cyan);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin:0 0 6px}
+.work-tags{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 10px}
+.work-tags span{font-size:10px;color:#c0c9d8;border:1px solid var(--line);padding:4px 8px;border-radius:5px}
+.work-link{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--cyan)}
+.work-link span{transition:.2s}
+.work-link:hover span{transform:translate(2px,-2px)}
