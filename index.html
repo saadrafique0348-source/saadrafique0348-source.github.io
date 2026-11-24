@@ -11,6 +11,12 @@
   </script>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#080b14">
+<style>
+#swarmCanvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60}
+.swarm-toggle{background:none;border:1px solid var(--line);border-radius:8px;color:var(--muted);padding:8px 11px;cursor:pointer;font-size:14px;line-height:1}
+.swarm-toggle:hover{color:#fff;border-color:#6ee7e055}
+.swarm-toggle.off{opacity:.4}
+</style>
   <title>Saad Rafique — Developer & Creative</title>
   <meta name="description" content="Saad Rafique — BS Computer Science student, web developer and creative video editor from Pakistan.">
   <link rel="canonical" href="https://saadrafique.me/">
@@ -22,12 +28,13 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <canvas id="swarmCanvas" aria-hidden="true"></canvas>
   <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
   <header class="site-header">
     <a class="brand" href="#home" aria-label="Saad Rafique home"><span class="brand-mark">S</span><span>SAAD<span class="brand-dot">.</span></span></a>
     <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false"><span></span><span></span></button>
     <nav class="nav-links" id="navLinks" aria-label="Main navigation">
-      <a href="#about">About</a><a href="#skills">Skills</a><a href="#work">Work</a><a href="#services">Services</a><a href="#education">Education</a><a class="nav-contact" href="#contact">Let's talk <span>↗</span></a>
+      <a href="#about">About</a><a href="#skills">Skills</a><a href="#work">Work</a><a href="#services">Services</a><a href="#education">Education</a><a class="nav-contact" href="#contact">Let's talk <span>↗</span></a><button class="swarm-toggle" id="swarmToggle" aria-label="Toggle cursor effect" aria-pressed="true" title="Cursor effect (Alt+Shift+S)">✦</button>
     </nav>
   </header>
   <main>
@@ -275,4 +282,29 @@ s0.parentNode.insertBefore(s1,s0);
 })();
 </script>
 <!--End of Tawk.to Script-->
+<!--Swarm cursor effect (colourful triangles follow the cursor; Alt+Shift+S toggles)-->
+<script>
+(function(){
+  var canvas=document.getElementById('swarmCanvas');
+  var toggle=document.getElementById('swarmToggle');
+  if(!canvas) return;
+  var ctx=canvas.getContext('2d');
+  var COLORS=['#ff5d8f','#ffd166','#6ee7e0','#9b8cff','#8aff80','#ff9f43'];
+  var parts=[], running=true;
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function size(){var d=Math.min(window.devicePixelRatio||1,1.5);canvas.width=innerWidth*d;canvas.height=innerHeight*d;ctx.setTransform(d,0,0,d,0,0);}
+  size();addEventListener('resize',size);
+  function spawn(x,y,n){for(var i=0;i<n;i++){if(parts.length>90)parts.shift();var a=Math.random()*Math.PI*2,sp=0.4+Math.random()*1.8;parts.push({x:x,y:y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-0.4,s:5+Math.random()*7,r:Math.random()*Math.PI*2,vr:(Math.random()-0.5)*0.25,life:1,c:COLORS[(Math.random()*COLORS.length)|0]});}}
+  function frame(){ctx.clearRect(0,0,innerWidth,innerHeight);if(running){for(var i=parts.length-1;i>=0;i--){var p=parts[i];p.x+=p.vx;p.y+=p.vy;p.vy+=0.015;p.vx*=0.985;p.vy*=0.985;p.r+=p.vr;p.life-=0.016;if(p.life<=0){parts.splice(i,1);continue;}ctx.save();ctx.globalAlpha=Math.max(p.life,0);ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;ctx.beginPath();ctx.moveTo(0,-p.s);ctx.lineTo(p.s*0.9,p.s*0.7);ctx.lineTo(-p.s*0.9,p.s*0.7);ctx.closePath();ctx.fill();ctx.restore();}}requestAnimationFrame(frame);}
+  function setOn(on){running=on;canvas.style.display=on?'block':'none';if(toggle){toggle.classList.toggle('off',!on);toggle.setAttribute('aria-pressed',on?'true':'false');}try{localStorage.setItem('swarm',on?'1':'0');}catch(e){}}
+  addEventListener('mousemove',function(e){if(running&&!reduce)spawn(e.clientX,e.clientY,2);},{passive:true});
+  addEventListener('touchmove',function(e){if(e.touches&&e.touches[0]&&running&&!reduce)spawn(e.touches[0].clientX,e.touches[0].clientY,2);},{passive:true});
+  addEventListener('touchstart',function(e){if(e.touches&&e.touches[0]&&running&&!reduce)spawn(e.touches[0].clientX,e.touches[0].clientY,6);},{passive:true});
+  document.addEventListener('keydown',function(e){if(e.altKey&&e.shiftKey&&(e.key==='S'||e.key==='s')){e.preventDefault();setOn(!running);}});
+  if(toggle)toggle.addEventListener('click',function(){setOn(!running);});
+  var saved=null;try{saved=localStorage.getItem('swarm');}catch(e){}
+  if(reduce||saved==='0')setOn(false);
+  requestAnimationFrame(frame);
+})();
+</script>
 </body></html>
