@@ -12,18 +12,44 @@
     toggle.setAttribute('aria-label', 'Open navigation');
   }));
 
-  const words = ['digital experiences.', 'websites that connect.', 'visual stories that move.'];
-  const word = document.getElementById('changingWord');
-  let wordIndex = 0;
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    window.setInterval(() => {
-      wordIndex = (wordIndex + 1) % words.length;
-      word.textContent = words[wordIndex];
-    }, 2600);
+  // Light / dark theme toggle (default light; saved choice wins, else device setting —
+  // the head script already applied the starting theme before first paint).
+  const rootEl = document.documentElement;
+  const themeBtn = document.getElementById('themeToggle');
+  const themeMeta = document.querySelector('meta[name="theme-color"]');
+  function applyTheme(mode) {
+    rootEl.setAttribute('data-theme', mode);
+    if (themeMeta) themeMeta.setAttribute('content', mode === 'dark' ? '#0d0f16' : '#faf6ef');
+    if (themeBtn) {
+      themeBtn.textContent = mode === 'dark' ? '☀' : '☾';
+      themeBtn.setAttribute('aria-pressed', String(mode === 'dark'));
+      themeBtn.setAttribute('aria-label', mode === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+      themeBtn.title = mode === 'dark' ? 'Light theme' : 'Dark theme';
+    }
+    try { localStorage.setItem('theme', mode); } catch (e) {}
+  }
+  if (themeBtn) {
+    themeBtn.addEventListener('click', () => {
+      applyTheme(rootEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    });
+    // Sync the button with the theme the head script already applied.
+    applyTheme(rootEl.getAttribute('data-theme') === 'dark' ? 'dark' : 'light');
   }
 
+  // "The full edit bay" category tabs
+  document.querySelectorAll('.tabs .tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tabs .tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      document.querySelectorAll('#editbay .creative-item').forEach(item => {
+        item.style.display = (f === 'all' || item.dataset.cat === f) ? '' : 'none';
+      });
+    });
+  });
+
   document.getElementById('year').textContent = new Date().getFullYear();
-  const revealItems = document.querySelectorAll('.section-block, .skill-card, .work-card, .service-row, .education-entry');
+  const revealItems = document.querySelectorAll('.section-block, .work-card, .service-card, .education-entry, .creative-item');
   if ('IntersectionObserver' in window) {
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
